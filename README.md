@@ -27,7 +27,7 @@ If you already have the CAVE2 template open on your machine, follow these steps 
     ```
 3.  **Add Remote:**
     ```bash
-    git remote add origin https://github.com/OdisMaximus/SkywayPark.git
+    git remote add origin https://github.com/OdisMaximus/OffTheRoad.git
     ```
 4.  **Fetch & Force Overlay:**
     ```bash
