@@ -3,61 +3,84 @@
 public class PavementManager : MonoBehaviour
 {
     [Header("Win Condition")]
-    public int tilesNeededToWin = 10; 
+    public int tilesNeededToWin = 10;
     private int tilesPainted = 0;
+    private bool pavementCompleteTriggered = false;
 
     [Header("The 'After' State")]
     public Material reflectivePaintMaterial;
-    public GameObject trafficCongestion; //
+    public GameObject trafficCongestion;
     public GameObject SidewalkFolder;
 
-    // EMERGENCY SAFETY BUTTON FUNCTION [cite: 2026-03-04]
+    [Header("Pavement Roadblocks")]
+    public GameObject[] pavementRoadBlocks;
+
+    [Header("Traffic System")]
+    public TrafficManager trafficManager;
+    public int congestionReductionOnComplete = 2;
+
     public void RevealAllGhostShades()
     {
         Debug.Log("SAFETY TRIGGER: Forcing all ghosts to Default layer.");
         GameObject[] ghosts = GameObject.FindGameObjectsWithTag("ShadeTag");
         foreach (GameObject ghost in ghosts)
         {
-            // Force them to the visible 'Default' layer (0)
-            ghost.layer = 0; 
+            ghost.layer = 0;
         }
     }
 
     public void ReportTilePainted()
     {
         tilesPainted++;
-        if (tilesPainted >= tilesNeededToWin)
+
+        if (!pavementCompleteTriggered && tilesPainted >= tilesNeededToWin)
         {
+            pavementCompleteTriggered = true;
             TriggerCityUpgrade();
         }
     }
 
     void TriggerCityUpgrade()
     {
-        // 1. Remove Traffic (Hard Disable)
-        if (trafficCongestion != null) 
+        if (trafficCongestion != null)
         {
-            trafficCongestion.SetActive(false); 
+            trafficCongestion.SetActive(false);
             Debug.Log("Traffic Removed!");
         }
 
-        // 2. Reveal all Ghost Shades automatically on win [cite: 2026-03-04]
-        RevealAllGhostShades();
+        if (trafficManager != null)
+        {
+            trafficManager.ReduceCongestion(congestionReductionOnComplete);
+        }
 
-        // 3. Paint the sidewalks
         if (SidewalkFolder != null)
         {
             MeshRenderer[] allRenderers = SidewalkFolder.GetComponentsInChildren<MeshRenderer>();
             foreach (MeshRenderer tr in allRenderers)
             {
-                tr.enabled = true; 
+                tr.enabled = true;
                 tr.material = reflectivePaintMaterial;
             }
         }
+
+        if (pavementRoadBlocks != null)
+        {
+            foreach (GameObject block in pavementRoadBlocks)
+            {
+                if (block != null)
+                {
+                    block.SetActive(false);
+                }
+            }
+        }
+
+        // Keep or remove this depending on whether pavement should reveal shades
+        // RevealAllGhostShades();
     }
 
-    // Optional: Press 'K' in the CAVE2 to trigger safety reveal [cite: 2026-03-04]
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.B)) RevealAllGhostShades();
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+            RevealAllGhostShades();
     }
 }
