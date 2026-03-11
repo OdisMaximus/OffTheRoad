@@ -25931,6 +25931,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 20000010245051402, guid: c1621f4dd1e8c2748a5a423aa7736d55,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 311
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1621f4dd1e8c2748a5a423aa7736d55, type: 3}
 --- !u!114 &1477776056 stripped
@@ -35666,12 +35671,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b79b153562339fab298fb936e9c85ca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilesNeededToWin: 10
+  tilesNeededToWin: 5
   reflectivePaintMaterial: {fileID: 2100000, guid: bf632d29e89dd464b93c1b2dc79460db,
     type: 2}
-  otherSidewalks:
-  - {fileID: 1059532328}
-  - {fileID: 143412367}
   trafficCongestion: {fileID: 1983426562}
   SidewalkFolder: {fileID: 1174098739}
 --- !u!4 &2050936937
@@ -36794,10 +36796,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3451773620200082492, guid: 84d37c9664b621047ad0c0cb487506df,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7043089171601949431, guid: 84d37c9664b621047ad0c0cb487506df,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2322
+      value: 0.1705
+      objectReference: {fileID: 0}
+    - target: {fileID: 7043089171601949431, guid: 84d37c9664b621047ad0c0cb487506df,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.3999
+      objectReference: {fileID: 0}
+    - target: {fileID: 7043089171601949431, guid: 84d37c9664b621047ad0c0cb487506df,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.2909
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84d37c9664b621047ad0c0cb487506df, type: 3}
