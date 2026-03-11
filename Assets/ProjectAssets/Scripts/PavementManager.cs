@@ -19,6 +19,9 @@ public class PavementManager : MonoBehaviour
     public TrafficManager trafficManager;
     public int congestionReductionOnComplete = 2;
 
+    [Header("Tool Swap")]
+    public GameObject wandObject;
+
     public void RevealAllGhostShades()
     {
         Debug.Log("SAFETY TRIGGER: Forcing all ghosts to Default layer.");
@@ -74,13 +77,30 @@ public class PavementManager : MonoBehaviour
             }
         }
 
-        // Keep or remove this depending on whether pavement should reveal shades
-        // RevealAllGhostShades();
+        // Swap tools
+        if (wandObject != null)
+        {
+            Debug.Log("Wand object found: " + wandObject.name);
+    
+            PaintBrush pb = wandObject.GetComponent<PaintBrush>();
+            GreeneryGun gg = wandObject.GetComponent<GreeneryGun>();
+            
+            Debug.Log("PaintBrush found: " + (pb != null));
+            Debug.Log("GreeneryGun found: " + (gg != null));
+            
+            if (pb != null) pb.enabled = false;
+            if (gg != null) gg.enabled = true;
+            
+            Debug.Log("Tool swapped: Paintbrush OFF, Greenery Gun ON");
+        }
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.B))
             RevealAllGhostShades();
+
+        if (Input.GetKeyDown(KeyCode.T))
+            TriggerCityUpgrade();
     }
 }

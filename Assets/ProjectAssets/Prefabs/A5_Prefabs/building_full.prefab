@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 4001395930071499090}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -251,6 +251,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: type_building-form
+      objectReference: {fileID: 0}
+    - target: {fileID: 2832630442479240658, guid: 98c6ca124d9cd13429b53b1d614a7221,
+        type: 3}
+      propertyPath: m_TagString
+      value: Type
       objectReference: {fileID: 0}
     - target: {fileID: 2832630442479240657, guid: 98c6ca124d9cd13429b53b1d614a7221,
         type: 3}
