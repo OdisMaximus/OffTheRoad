@@ -9,7 +9,7 @@ public class PaintBrush : MonoBehaviour
     {
         // For testing on your laptop trackpad, we use Fire1 (Left Click). 
         // In CAVE2, you'll map this to the wand trigger.
-        if (Input.GetButton("Fire1")) 
+        if (Input.GetButton("Fire1") || CAVE2.GetButton(CAVE2.Button.ButtonUp)) 
         {
             CastPaintRay();
         }

@@ -20,20 +20,20 @@ public class HighlightBehavior : MonoBehaviour
     public bool allowHighlight = true;
 
     public GameObject shadeGrabbableObject;
-    public GameObject newGameManagerObject;
-    public NewGameManager newGameManagerScript;
+    public GameObject ShadeManagerObject;
+    public ShadeManager ShadeManagerScript;
 
     void Start()
     {
         modelRenderer = theModel.GetComponent<MeshRenderer>();
         theModelBoxCollider = theModel.GetComponent<BoxCollider>();
-        newGameManagerScript = newGameManagerObject.GetComponent<NewGameManager>();
+        ShadeManagerScript = ShadeManagerObject.GetComponent<ShadeManager>();
         //InvokeRepeating("CycleColor", 2.0f, 2.0f);
     }
 
     void HighlightShadeToPlace()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) || CAVE2.GetButton(CAVE2.Button.ButtonLeft))
         {
             modelRenderer.enabled = true;
             modelRenderer.material.color = Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time * speed, 1));
@@ -65,7 +65,7 @@ public class HighlightBehavior : MonoBehaviour
             
 
             //ADD TO 'shadeScore'
-            newGameManagerScript.NumShadePlacedUpdate();
+            ShadeManagerScript.NumShadePlacedUpdate();
 
         }
     }

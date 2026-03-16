@@ -7,7 +7,7 @@ public class GreeneryGun : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space ) || CAVE2.GetButton(CAVE2.Button.ButtonDown))
         {
             ShootGreenery();
         }
