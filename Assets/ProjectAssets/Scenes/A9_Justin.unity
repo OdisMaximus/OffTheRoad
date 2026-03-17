@@ -3739,6 +3739,102 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1477776054}
   m_PrefabAsset: {fileID: 0}
+--- !u!82 &101021293
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101021291}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &101021294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3770,6 +3866,10 @@ MonoBehaviour:
   range: 50
   greeneryTexture: {fileID: 2800000, guid: 4783857945b2344f5b7347302e7a2b0d, type: 3}
   ammo: 0
+  shootSound: {fileID: 8300000, guid: 3ea18afcbb6d54819956341fe13df265, type: 3}
+  emptyClickSound: {fileID: 8300000, guid: f3eabff09941247f9a20aed394915968, type: 3}
+  reloadSound: {fileID: 8300000, guid: 469430b7651c44167b5f39cbab284084, type: 3}
+  clickCooldown: 0.3
 --- !u!1 &102163558
 GameObject:
   m_ObjectHideFlags: 0
@@ -14213,7 +14313,7 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -18575,7 +18675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f89d15e96f6c4e288a9bc3763f75e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammoPickupPrefab: {fileID: 8423037471612220938, guid: 5f5d9d9dd54ef4251b25e9b8d40c7c03,
+  ammoPickupPrefab: {fileID: 804646876928628798, guid: 05a4826e2b2e3400d87891410bbc236c,
     type: 3}
   respawnCooldown: 30
   ammoPerPickup: 4
@@ -27066,7 +27166,7 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -28107,7 +28207,7 @@ Transform:
   - {fileID: 1099611472}
   - {fileID: 1983426563}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &953773758
 GameObject:
@@ -37731,7 +37831,7 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -39346,7 +39446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f89d15e96f6c4e288a9bc3763f75e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammoPickupPrefab: {fileID: 8423037471612220938, guid: 5f5d9d9dd54ef4251b25e9b8d40c7c03,
+  ammoPickupPrefab: {fileID: 804646876928628798, guid: 05a4826e2b2e3400d87891410bbc236c,
     type: 3}
   respawnCooldown: 30
   ammoPerPickup: 4
@@ -39358,7 +39458,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1342870624}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40.31, y: 1.459, z: 38.71}
+  m_LocalPosition: {x: -40.31, y: 0.79, z: 38.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -42002,7 +42102,7 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -46140,7 +46240,7 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -48316,7 +48416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f89d15e96f6c4e288a9bc3763f75e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammoPickupPrefab: {fileID: 8423037471612220938, guid: 5f5d9d9dd54ef4251b25e9b8d40c7c03,
+  ammoPickupPrefab: {fileID: 804646876928628798, guid: 05a4826e2b2e3400d87891410bbc236c,
     type: 3}
   respawnCooldown: 30
   ammoPerPickup: 4
@@ -50783,7 +50883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f89d15e96f6c4e288a9bc3763f75e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammoPickupPrefab: {fileID: 8423037471612220938, guid: 5f5d9d9dd54ef4251b25e9b8d40c7c03,
+  ammoPickupPrefab: {fileID: 804646876928628798, guid: 05a4826e2b2e3400d87891410bbc236c,
     type: 3}
   respawnCooldown: 30
   ammoPerPickup: 4
@@ -55962,6 +56062,10 @@ MonoBehaviour:
   range: 50
   greeneryTexture: {fileID: 2800000, guid: 4783857945b2344f5b7347302e7a2b0d, type: 3}
   ammo: 24
+  shootSound: {fileID: 0}
+  emptyClickSound: {fileID: 0}
+  reloadSound: {fileID: 0}
+  clickCooldown: 0.3
 --- !u!114 &1882743610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57470,7 +57574,7 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -63369,7 +63473,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010304883860, guid: eb1be059e593c164182a51ba64d03d94, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 114000010235630928, guid: eb1be059e593c164182a51ba64d03d94,
         type: 3}
