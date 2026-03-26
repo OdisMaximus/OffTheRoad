@@ -19,15 +19,11 @@ public class GreeneryGun : MonoBehaviour
 
     void Update()
     {
-        if (CAVE2.GetButton(0, CAVE2.Button.ButtonLeft) || Input.GetKey(KeyCode.F))
+        if (CAVE2.GetButton(CAVE2.Button.ButtonLeft) || Input.GetKey(KeyCode.F))
         {
             ShootGreenery();
         }
 
-        if (Time.frameCount % 60 == 0)
-        {
-            Debug.Log("Current ammo: " + ammo);
-        }
     }
 
     void ShootGreenery()
