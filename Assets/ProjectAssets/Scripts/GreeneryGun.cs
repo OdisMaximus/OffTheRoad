@@ -23,7 +23,6 @@ public class GreeneryGun : MonoBehaviour
         {
             ShootGreenery();
         }
-
     }
 
     void ShootGreenery()
@@ -52,6 +51,7 @@ public class GreeneryGun : MonoBehaviour
 
                 ammo--;
                 audioSource.PlayOneShot(shootSound);
+                EnableGreenery(hitObject);
 
                 hitObject.GetComponent<Renderer>().material.color = Color.white;
                 hitObject.GetComponent<Renderer>().material.mainTexture = greeneryTexture;
@@ -66,9 +66,29 @@ public class GreeneryGun : MonoBehaviour
                         {
                             r.material.color = new Color(0.0f, 0.6f, 0.0f);
                         }
+                        foreach (Renderer childRenderer in child.GetComponentsInChildren<Renderer>())
+                        {
+                            childRenderer.material.color = new Color(0.0f, 0.6f, 0.0f);
+                        }
                     }
                 }
             }
+        }
+    }
+
+    void EnableGreenery(GameObject buildingCube)
+    {
+        Transform buildingFull = buildingCube.transform.parent;
+        Transform greeneryGroup = buildingFull.Find("Greenery_group");
+
+        if (greeneryGroup != null)
+        {
+            greeneryGroup.gameObject.SetActive(true);
+            Debug.Log("Greenery enabled!");
+        }
+        else
+        {
+            Debug.Log("Greenery_group not found!");
         }
     }
 
