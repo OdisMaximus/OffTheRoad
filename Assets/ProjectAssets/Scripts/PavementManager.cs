@@ -9,7 +9,7 @@ public class PavementManager : MonoBehaviour
 
     [Header("The 'After' State")]
     public Material reflectivePaintMaterial;
-    public GameObject trafficCongestion;
+    //public GameObject trafficCongestion;
     public GameObject SidewalkFolder;
 
     [Header("Pavement Roadblocks")]
@@ -45,11 +45,13 @@ public class PavementManager : MonoBehaviour
 
     void TriggerCityUpgrade()
     {
+        /*
         if (trafficCongestion != null)
         {
             trafficCongestion.SetActive(false);
             Debug.Log("Traffic Removed!");
         }
+        */
 
         if (trafficManager != null)
         {
