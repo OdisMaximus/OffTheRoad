@@ -9,28 +9,17 @@ public class PavementManager : MonoBehaviour
 
     [Header("The 'After' State")]
     public Material reflectivePaintMaterial;
-    //public GameObject trafficCongestion;
     public GameObject SidewalkFolder;
 
-    [Header("Pavement Roadblocks")]
+    [Header("Pavement Roadblocks / Congestion")]
+    [Tooltip("Drag the red 'CONGESTION' text objects or roadblocks here to make them disappear on win.")]
     public GameObject[] pavementRoadBlocks;
 
-    [Header("Traffic System")]
-    public TrafficManager trafficManager;
-    public int congestionReductionOnComplete = 2;
+    [Header("Particles & Misting")]
+    public ParticleSystem[] coolingParticles; 
 
     [Header("Tool Swap")]
     public GameObject wandObject;
-
-    public void RevealAllGhostShades()
-    {
-        Debug.Log("SAFETY TRIGGER: Forcing all ghosts to Default layer.");
-        GameObject[] ghosts = GameObject.FindGameObjectsWithTag("ShadeTag");
-        foreach (GameObject ghost in ghosts)
-        {
-            ghost.layer = 0;
-        }
-    }
 
     public void ReportTilePainted()
     {
@@ -43,66 +32,61 @@ public class PavementManager : MonoBehaviour
         }
     }
 
-    void TriggerCityUpgrade()
+    public void TriggerCityUpgrade()
     {
-        /*
-        if (trafficCongestion != null)
-        {
-            trafficCongestion.SetActive(false);
-            Debug.Log("Traffic Removed!");
-        }
-        */
-
-        if (trafficManager != null)
-        {
-            trafficManager.ReduceCongestion(congestionReductionOnComplete);
-        }
-
+        // 1. Auto-paint all remaining tiles in the folder
         if (SidewalkFolder != null)
         {
-            MeshRenderer[] allRenderers = SidewalkFolder.GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer tr in allRenderers)
+            PaintableChunk[] allChunks = SidewalkFolder.GetComponentsInChildren<PaintableChunk>();
+            foreach (PaintableChunk chunk in allChunks)
             {
-                tr.enabled = true;
-                tr.material = reflectivePaintMaterial;
+                chunk.ApplyPaint(); 
             }
         }
 
-        if (pavementRoadBlocks != null)
+        // 2. Trigger Cooling Particles
+        if (coolingParticles != null)
         {
-            foreach (GameObject block in pavementRoadBlocks)
+            foreach (ParticleSystem ps in coolingParticles)
             {
-                if (block != null)
+                if (ps != null)
                 {
-                    block.SetActive(false);
+                    ps.Play();
+                    Debug.Log("Cooling System Activated: " + ps.gameObject.name);
                 }
             }
         }
 
-        // Swap tools
+        // 3. Disable Roadblocks and Congestion
+        // Since we removed TrafficManager, you must drag the objects you want 
+        // to disappear into the 'Pavement Road Blocks' list in the Inspector.
+        if (pavementRoadBlocks != null)
+        {
+            foreach (GameObject block in pavementRoadBlocks)
+            {
+                if (block != null) 
+                {
+                    block.SetActive(false);
+                    Debug.Log("Roadblock/Congestion Removed: " + block.name);
+                }
+            }
+        }
+
+        // 4. Clean Tool Swap
         if (wandObject != null)
         {
-            Debug.Log("Wand object found: " + wandObject.name);
-    
             PaintBrush pb = wandObject.GetComponent<PaintBrush>();
             GreeneryGun gg = wandObject.GetComponent<GreeneryGun>();
             
-            Debug.Log("PaintBrush found: " + (pb != null));
-            Debug.Log("GreeneryGun found: " + (gg != null));
-            
-            if (pb != null) pb.enabled = false;
+            if (pb != null) pb.FinalizeWinState(); 
             if (gg != null) gg.enabled = true;
             
-            Debug.Log("Tool swapped: Paintbrush OFF, Greenery Gun ON");
+            Debug.Log("Interaction Complete: Brush Hidden, Particles Playing.");
         }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-            RevealAllGhostShades();
-
-        if (Input.GetKeyDown(KeyCode.T))
-            TriggerCityUpgrade();
+        if (Input.GetKeyDown(KeyCode.T)) TriggerCityUpgrade();
     }
 }
