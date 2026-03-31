@@ -1,35 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ShadeManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     public int numShadePlaced = 0;
-
+    public int shadesRequired = 6; // Set this to 6 in Inspector
     public GameObject CongestionObjectsWest;
+    
+    private bool interaction3Opened = false;
 
-    void Awake()
-    {
-        
-    }
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        if(numShadePlaced == 6)
+        // Added interaction3Opened check so it doesn't keep running every frame
+        if(!interaction3Opened && numShadePlaced >= shadesRequired)
         {
             OpenInteraction3();
-            numShadePlaced = 100;
-
         }
-            
     }
 
     public void NumShadePlacedUpdate()
@@ -39,11 +24,13 @@ public class ShadeManager : MonoBehaviour
 
     public void OpenInteraction3()
     {
-        CongestionObjectsWest.SetActive(false);
+        interaction3Opened = true;
+        numShadePlaced = 100; // Keep your flag logic
+
+        if(CongestionObjectsWest != null) 
+        {
+            CongestionObjectsWest.SetActive(false);
+            Debug.Log("Roadblocks cleared by Shade Manager!");
+        }
     }
-
-
-
-    
-
 }

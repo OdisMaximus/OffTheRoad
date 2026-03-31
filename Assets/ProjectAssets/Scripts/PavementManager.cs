@@ -9,33 +9,44 @@ public class PavementManager : MonoBehaviour
 
     [Header("The 'After' State")]
     public Material reflectivePaintMaterial;
-    public GameObject trafficCongestion;
     public GameObject SidewalkFolder;
 
-    [Header("Pavement Roadblocks")]
+    [Header("Shadow Fix (Interaction 2)")]
+    public Material solidPaintMaterial; 
+
+    [Header("Roadblocks to Remove")]
     public GameObject[] pavementRoadBlocks;
 
-    [Header("Traffic System")]
-    public TrafficManager trafficManager;
-    public int congestionReductionOnComplete = 2;
+    [Header("Particle Swap System")]
+    [Tooltip("Drag the PARENT GameObject holding all heating particles here")]
+    public GameObject heatingParticlesParent; 
+    [Tooltip("Drag the PARENT GameObject holding all cooling particles here")]
+    public GameObject coolingParticlesParent; 
+
+    // Hidden arrays that the script will populate automatically
+    private ParticleSystem[] heatingParticles;
+    private ParticleSystem[] coolingParticles;
 
     [Header("Tool Swap")]
     public GameObject wandObject;
 
-    public void RevealAllGhostShades()
+    void Awake()
     {
-        Debug.Log("SAFETY TRIGGER: Forcing all ghosts to Default layer.");
-        GameObject[] ghosts = GameObject.FindGameObjectsWithTag("ShadeTag");
-        foreach (GameObject ghost in ghosts)
+        // Automatically find every particle system inside the assigned parent folders
+        if (heatingParticlesParent != null)
         {
-            ghost.layer = 0;
+            heatingParticles = heatingParticlesParent.GetComponentsInChildren<ParticleSystem>();
+        }
+        
+        if (coolingParticlesParent != null)
+        {
+            coolingParticles = coolingParticlesParent.GetComponentsInChildren<ParticleSystem>();
         }
     }
 
     public void ReportTilePainted()
     {
         tilesPainted++;
-
         if (!pavementCompleteTriggered && tilesPainted >= tilesNeededToWin)
         {
             pavementCompleteTriggered = true;
@@ -43,64 +54,53 @@ public class PavementManager : MonoBehaviour
         }
     }
 
-    void TriggerCityUpgrade()
+    public void TriggerCityUpgrade()
     {
-        if (trafficCongestion != null)
-        {
-            trafficCongestion.SetActive(false);
-            Debug.Log("Traffic Removed!");
-        }
-
-        if (trafficManager != null)
-        {
-            trafficManager.ReduceCongestion(congestionReductionOnComplete);
-        }
-
+        // 1. Auto-paint and SWAP MATERIAL
         if (SidewalkFolder != null)
         {
-            MeshRenderer[] allRenderers = SidewalkFolder.GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer tr in allRenderers)
-            {
-                tr.enabled = true;
-                tr.material = reflectivePaintMaterial;
-            }
-        }
+            PaintableChunk[] allChunks = SidewalkFolder.GetComponentsInChildren<PaintableChunk>();
+            foreach (PaintableChunk chunk in allChunks) 
+            { 
+                chunk.ApplyPaint(); 
 
-        if (pavementRoadBlocks != null)
-        {
-            foreach (GameObject block in pavementRoadBlocks)
-            {
-                if (block != null)
+                MeshRenderer renderer = chunk.GetComponent<MeshRenderer>();
+                if (renderer != null && solidPaintMaterial != null)
                 {
-                    block.SetActive(false);
+                    renderer.material = solidPaintMaterial;
                 }
             }
         }
 
-        // Swap tools
+        // 2. PARTICLE SWAP (Stop Heat, Start Cooling)
+        if (heatingParticles != null)
+        {
+            foreach (ParticleSystem heat in heatingParticles) { if (heat != null) heat.Stop(); }
+        }
+
+        if (coolingParticles != null)
+        {
+            foreach (ParticleSystem cool in coolingParticles) { if (cool != null) cool.Play(); }
+        }
+
+        // 3. Disable Roadblocks
+        if (pavementRoadBlocks != null)
+        {
+            foreach (GameObject block in pavementRoadBlocks) { if (block != null) block.SetActive(false); }
+        }
+
+        // 4. Tool Swap
         if (wandObject != null)
         {
-            Debug.Log("Wand object found: " + wandObject.name);
-    
             PaintBrush pb = wandObject.GetComponent<PaintBrush>();
             GreeneryGun gg = wandObject.GetComponent<GreeneryGun>();
-            
-            Debug.Log("PaintBrush found: " + (pb != null));
-            Debug.Log("GreeneryGun found: " + (gg != null));
-            
-            if (pb != null) pb.enabled = false;
+            if (pb != null) pb.FinalizeWinState(); 
             if (gg != null) gg.enabled = true;
-            
-            Debug.Log("Tool swapped: Paintbrush OFF, Greenery Gun ON");
         }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-            RevealAllGhostShades();
-
-        if (Input.GetKeyDown(KeyCode.T))
-            TriggerCityUpgrade();
+        if (Input.GetKeyDown(KeyCode.T)) TriggerCityUpgrade();
     }
 }

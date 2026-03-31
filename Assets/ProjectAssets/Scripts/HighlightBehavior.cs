@@ -23,6 +23,9 @@ public class HighlightBehavior : MonoBehaviour
     public GameObject ShadeManagerObject;
     public ShadeManager ShadeManagerScript;
 
+    public GameObject shadeShadowObject;
+    //public MeshRenderer shadeShadowRenderer;
+
     void Start()
     {
         modelRenderer = theModel.GetComponent<MeshRenderer>();
@@ -59,6 +62,8 @@ public class HighlightBehavior : MonoBehaviour
         {
             allowHighlight = false;
             modelRenderer.enabled = true;
+            shadeShadowObject.SetActive(true);
+
             modelRenderer.material.color = currentColor;
             Destroy(shadeGrabbableObject);
 
