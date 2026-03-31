@@ -11,20 +11,42 @@ public class PavementManager : MonoBehaviour
     public Material reflectivePaintMaterial;
     public GameObject SidewalkFolder;
 
-    [Header("Pavement Roadblocks / Congestion")]
-    [Tooltip("Drag the red 'CONGESTION' text objects or roadblocks here to make them disappear on win.")]
+    [Header("Shadow Fix (Interaction 2)")]
+    public Material solidPaintMaterial; 
+
+    [Header("Roadblocks to Remove")]
     public GameObject[] pavementRoadBlocks;
 
-    [Header("Particles & Misting")]
-    public ParticleSystem[] coolingParticles; 
+    [Header("Particle Swap System")]
+    [Tooltip("Drag the PARENT GameObject holding all heating particles here")]
+    public GameObject heatingParticlesParent; 
+    [Tooltip("Drag the PARENT GameObject holding all cooling particles here")]
+    public GameObject coolingParticlesParent; 
+
+    // Hidden arrays that the script will populate automatically
+    private ParticleSystem[] heatingParticles;
+    private ParticleSystem[] coolingParticles;
 
     [Header("Tool Swap")]
     public GameObject wandObject;
 
+    void Awake()
+    {
+        // Automatically find every particle system inside the assigned parent folders
+        if (heatingParticlesParent != null)
+        {
+            heatingParticles = heatingParticlesParent.GetComponentsInChildren<ParticleSystem>();
+        }
+        
+        if (coolingParticlesParent != null)
+        {
+            coolingParticles = coolingParticlesParent.GetComponentsInChildren<ParticleSystem>();
+        }
+    }
+
     public void ReportTilePainted()
     {
         tilesPainted++;
-
         if (!pavementCompleteTriggered && tilesPainted >= tilesNeededToWin)
         {
             pavementCompleteTriggered = true;
@@ -34,54 +56,46 @@ public class PavementManager : MonoBehaviour
 
     public void TriggerCityUpgrade()
     {
-        // 1. Auto-paint all remaining tiles in the folder
+        // 1. Auto-paint and SWAP MATERIAL
         if (SidewalkFolder != null)
         {
             PaintableChunk[] allChunks = SidewalkFolder.GetComponentsInChildren<PaintableChunk>();
-            foreach (PaintableChunk chunk in allChunks)
-            {
+            foreach (PaintableChunk chunk in allChunks) 
+            { 
                 chunk.ApplyPaint(); 
+
+                MeshRenderer renderer = chunk.GetComponent<MeshRenderer>();
+                if (renderer != null && solidPaintMaterial != null)
+                {
+                    renderer.material = solidPaintMaterial;
+                }
             }
         }
 
-        // 2. Trigger Cooling Particles
+        // 2. PARTICLE SWAP (Stop Heat, Start Cooling)
+        if (heatingParticles != null)
+        {
+            foreach (ParticleSystem heat in heatingParticles) { if (heat != null) heat.Stop(); }
+        }
+
         if (coolingParticles != null)
         {
-            foreach (ParticleSystem ps in coolingParticles)
-            {
-                if (ps != null)
-                {
-                    ps.Play();
-                    Debug.Log("Cooling System Activated: " + ps.gameObject.name);
-                }
-            }
+            foreach (ParticleSystem cool in coolingParticles) { if (cool != null) cool.Play(); }
         }
 
-        // 3. Disable Roadblocks and Congestion
-        // Since we removed TrafficManager, you must drag the objects you want 
-        // to disappear into the 'Pavement Road Blocks' list in the Inspector.
+        // 3. Disable Roadblocks
         if (pavementRoadBlocks != null)
         {
-            foreach (GameObject block in pavementRoadBlocks)
-            {
-                if (block != null) 
-                {
-                    block.SetActive(false);
-                    Debug.Log("Roadblock/Congestion Removed: " + block.name);
-                }
-            }
+            foreach (GameObject block in pavementRoadBlocks) { if (block != null) block.SetActive(false); }
         }
 
-        // 4. Clean Tool Swap
+        // 4. Tool Swap
         if (wandObject != null)
         {
             PaintBrush pb = wandObject.GetComponent<PaintBrush>();
             GreeneryGun gg = wandObject.GetComponent<GreeneryGun>();
-            
             if (pb != null) pb.FinalizeWinState(); 
             if (gg != null) gg.enabled = true;
-            
-            Debug.Log("Interaction Complete: Brush Hidden, Particles Playing.");
         }
     }
 
