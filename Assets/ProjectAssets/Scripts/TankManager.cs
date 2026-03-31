@@ -1,78 +1,75 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class TankManager : MonoBehaviour
 {
     [Header("Water Visuals")]
+    [Tooltip("Drag the WaterPivot here, NOT the cylinder mesh")]
     public Transform waterMesh; 
-    public float emptyZ; 
-    public float fullZ;  
+    public float emptyScaleY = 0f; 
+    public float fullScaleY = 1f;
 
     [Header("Settings")]
-    public float maxWater = 10f; 
+    public float maxWater = 100f; 
     public float currentWater = 0f;
-    public float fillPerParticle = 0.05f; 
+    
+    [Header("Victory Feedback")]
     public GameObject mistingSystem; 
+    public AudioSource winAudio; // Drag your audio source here
 
     private bool rewardActivated = false;
 
     void Start() {
-        GetComponent<Rigidbody>().isKinematic = true; 
         if (mistingSystem == null) Debug.LogError("TANK: Misting System is NOT assigned!");
     }
 
     void Update() {
         if (waterMesh) {
+            // Calculate percentage and scale the Y axis smoothly
             float fillPct = Mathf.Clamp01(currentWater / maxWater);
-            float curZ = Mathf.Lerp(emptyZ, fullZ, fillPct);
-            waterMesh.localPosition = new Vector3(waterMesh.localPosition.x, waterMesh.localPosition.y, curZ);
+            float curScaleY = Mathf.Lerp(emptyScaleY, fullScaleY, fillPct);
+            
+            waterMesh.localScale = new Vector3(waterMesh.localScale.x, curScaleY, waterMesh.localScale.z);
             waterMesh.gameObject.SetActive(currentWater > 0.001f);
         }
 
         // BRUTE FORCE KEY CHECK
-        if (Input.GetKeyDown(KeyCode.V)) {
-            Debug.Log("TANK: V Key Pressed");
-            TriggerVictoryManually();
-        }
+        if (Input.GetKeyDown(KeyCode.V)) TriggerVictoryManually();
+        //if (CAVE2.GetButtonDown(CAVE2.Button.Button7)) TriggerVictoryManually();
+    }
 
-        // CAVE2 BUTTON CHECK (Checking both Button2 just in case)
-        if (CAVE2.GetButtonDown(CAVE2.Button.Button7)) {
-            Debug.Log("TANK: CAVE2 Button Pressed");
-            TriggerVictoryManually();
+    // Called by the ValveController script
+    public void AddWaterFromValve(float amount)
+    {
+        if (currentWater < maxWater)
+        {
+            currentWater += amount;
+            if (currentWater >= maxWater && !rewardActivated) ActivateVictory();
         }
     }
 
     void TriggerVictoryManually() {
         currentWater = maxWater;
-        if (!rewardActivated) {
-            Debug.Log("TANK: Activating Victory...");
-            ActivateVictory();
-        }
-    }
-
-    void OnParticleCollision(GameObject other) {
-        if (currentWater < maxWater) {
-            currentWater += fillPerParticle;
-            if (currentWater >= maxWater && !rewardActivated) ActivateVictory();
-        }
+        if (!rewardActivated) ActivateVictory();
     }
 
     void ActivateVictory() {
         rewardActivated = true;
+        
+        // 1. Play Audio
+        if (winAudio != null) {
+            winAudio.Play();
+        }
+
+        // 2. Turn on Misting Particles
         if (mistingSystem) {
             mistingSystem.SetActive(true);
             
-            // Get all particles including hidden ones
             ParticleSystem[] pSystems = mistingSystem.GetComponentsInChildren<ParticleSystem>(true);
-            Debug.Log("TANK: Found " + pSystems.Length + " particle systems to play.");
-
             foreach (var ps in pSystems) {
                 ps.gameObject.SetActive(true);
-                ps.Clear(); // Clear any old stuck particles
+                ps.Clear(); 
                 ps.Play();
             }
-        } else {
-            Debug.LogError("TANK: Cannot activate victory - Misting System missing!");
         }
     }
 }
