@@ -25,7 +25,7 @@ public class ChangeSunColor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Space) || CAVE2.GetButton(CAVE2.Button.ButtonLeft))
+        /*if (Input.GetKey(KeyCode.Space) || CAVE2.GetButton(CAVE2.Button.ButtonLeft))
         {
             
             sunColor.color = Color.Lerp(colorLevel1, colorLevel2, Mathf.PingPong(Time.time * speed, 1));
@@ -33,7 +33,12 @@ public class ChangeSunColor : MonoBehaviour
         else
         {
             sunColor.color = colorLevel1;
-        }
+        }*/
 
+    }
+
+    public void UpdateSunColor()
+    {
+        sunColor.color = defaultColorLevel;
     }
 }

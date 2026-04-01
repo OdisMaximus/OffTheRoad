@@ -44,5 +44,18 @@ public class TrafficManager : MonoBehaviour
             }
         }
     }
+    
+    public int GetCongestionValue()
+    {
+        return currentCongestionLevel;
+    }
+
+    public void FinalCongestionValue()
+    {
+        currentCongestionLevel = 100;
+    }
 }
+
+
+
 

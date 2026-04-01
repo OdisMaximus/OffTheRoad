@@ -12,9 +12,25 @@ public class GreeneryGun : MonoBehaviour
     private float nextClickTime = 0f;
     public float clickCooldown = 0.3f;
 
+    [Header("Win Condition to Win")]
+    public int GreeneryAdded = 0;
+
+    public GameObject groupOfTraffic;
+
+    public GameObject GameManager;
+    public AudioManager AudioManagerScript;
+
+    public GameObject SunObject;
+    public ChangeSunColor ChangeSunColorScript;
+
     void Start()
     {
+        AudioManagerScript = GameManager.GetComponent<AudioManager>();
+        ChangeSunColorScript = SunObject.GetComponent<ChangeSunColor>();
+        
         audioSource = GetComponent<AudioSource>();
+        
+        
     }
 
     void Update()
@@ -23,7 +39,19 @@ public class GreeneryGun : MonoBehaviour
         {
             ShootGreenery();
         }
+
+        if(GreeneryAdded == 6)
+        {
+            groupOfTraffic.SetActive(false);
+            AudioManagerScript.WinConditionAudio();
+            ChangeSunColorScript.UpdateSunColor();
+
+            GreeneryAdded = 100;
+
+        }
     }
+
+
 
     void ShootGreenery()
     {
@@ -85,6 +113,9 @@ public class GreeneryGun : MonoBehaviour
         {
             greeneryGroup.gameObject.SetActive(true);
             Debug.Log("Greenery enabled!");
+            
+            //LINE NEEDED FOR WIN CONDITION
+            GreeneryAdded++;
         }
         else
         {
