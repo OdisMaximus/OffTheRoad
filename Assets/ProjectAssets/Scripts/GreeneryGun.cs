@@ -6,13 +6,20 @@ public class GreeneryGun : MonoBehaviour
     public Texture2D greeneryTexture;
     public AudioClip shootSound;
     public AudioClip winSound;
-    public int totalBuildings = 16;
-    private int buildingsGreened = 0;
+    public int totalBuildings = 6;
+    public int buildingsGreened = 0;
     public TrafficManager trafficManager;
     private AudioSource audioSource;
 
+
+    [Header("Connection: Game Progress Manager Here")]
+    public GameObject GameManagerObject;
+    public GameProgressManager GameProgressManagerScript;
+
     void Start()
     {
+        GameProgressManagerScript = GameManagerObject.GetComponent<GameProgressManager>();
+
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -62,7 +69,7 @@ public class GreeneryGun : MonoBehaviour
                 }
 
                 buildingsGreened++;
-                if (buildingsGreened >= totalBuildings)
+                if (buildingsGreened == totalBuildings) //WIN CONDITION: 6
                 {
                     TriggerWin();
                 }
@@ -83,6 +90,7 @@ public class GreeneryGun : MonoBehaviour
 
     void TriggerWin()
     {
+        GameProgressManagerScript.UpdateGameProgressScore();
         audioSource.PlayOneShot(winSound);
         if (trafficManager != null)
         {

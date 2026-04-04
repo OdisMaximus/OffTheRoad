@@ -20,10 +20,17 @@ public class HighlightBehavior : MonoBehaviour
     public bool allowHighlight = true;
 
     public GameObject shadeGrabbableObject;
+
+    
+    [Header("Shade Manager Object")]
     public GameObject ShadeManagerObject;
     public ShadeManager ShadeManagerScript;
 
+    [Header("Shade Shadow Object")]
     public GameObject shadeShadowObject;
+
+   
+
     //public MeshRenderer shadeShadowRenderer;
 
     void Start()
@@ -34,18 +41,7 @@ public class HighlightBehavior : MonoBehaviour
         //InvokeRepeating("CycleColor", 2.0f, 2.0f);
     }
 
-    void HighlightShadeToPlace()
-    {
-        if (Input.GetKey(KeyCode.Space) || CAVE2.GetButton(CAVE2.Button.ButtonLeft))
-        {
-            modelRenderer.enabled = true;
-            modelRenderer.material.color = Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time * speed, 1));
-        }
-        else
-        {
-            modelRenderer.enabled = false;
-        }
-    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -54,6 +50,8 @@ public class HighlightBehavior : MonoBehaviour
             HighlightShadeToPlace();
         }
     }
+
+
 
     //IF SHADE IS PLACED, TURN ON SHADE
     void OnCollisionEnter(Collision other)
@@ -67,11 +65,25 @@ public class HighlightBehavior : MonoBehaviour
             modelRenderer.material.color = currentColor;
             Destroy(shadeGrabbableObject);
 
-            
+
 
             //ADD TO 'shadeScore'
             ShadeManagerScript.NumShadePlacedUpdate();
 
+        }
+    }
+
+    //HIGHLIGHTING BEHAVIOR
+    void HighlightShadeToPlace()
+    {
+        if (Input.GetKey(KeyCode.Space) || CAVE2.GetButton(CAVE2.Button.ButtonLeft))
+        {
+            modelRenderer.enabled = true;
+            modelRenderer.material.color = Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time * speed, 1));
+        }
+        else
+        {
+            modelRenderer.enabled = false;
         }
     }
 

@@ -21,7 +21,13 @@ public class TankManager : MonoBehaviour
 
     private bool rewardActivated = false;
 
+    [Header("Connection: Game Progress Manager Here")]
+    public GameObject GameManagerObject;
+    public GameProgressManager GameProgressManagerScript;
+
     void Start() {
+        GameProgressManagerScript = GameManagerObject.GetComponent<GameProgressManager>();
+
         if (mistingSystem == null) Debug.LogError("TANK: Misting System is NOT assigned!");
     }
 
@@ -79,5 +85,8 @@ public class TankManager : MonoBehaviour
                 mistAudio.Play();
             }
         }
+
+        //4. TRIGGER NEXT INTERACTION -> GreeneryGun
+        GameProgressManagerScript.UpdateGameProgressScore();
     }
 }

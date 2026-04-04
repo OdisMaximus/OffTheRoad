@@ -3,7 +3,7 @@
 public class PavementManager : MonoBehaviour
 {
     [Header("Win Condition")]
-    public int tilesNeededToWin = 10;
+    public int tilesNeededToWin = 6; //DEFAULT: 6
     private int tilesPainted = 0;
     private bool pavementCompleteTriggered = false;
 
@@ -32,13 +32,21 @@ public class PavementManager : MonoBehaviour
     [Header("Audio")]
     public AudioClip winSound;
 
+    [Header("Game Progress Manager Here")]
+    public GameObject GameManagerObject;
+    public GameProgressManager GameProgressManagerScript;
+
     void Awake()
     {
+        GameProgressManagerScript = GameManagerObject.GetComponent<GameProgressManager>();
+
         if (heatingParticlesParent != null)
             heatingParticles = heatingParticlesParent.GetComponentsInChildren<ParticleSystem>();
         
         if (coolingParticlesParent != null)
             coolingParticles = coolingParticlesParent.GetComponentsInChildren<ParticleSystem>();
+
+
     }
 
     public void ReportTilePainted()
@@ -48,6 +56,11 @@ public class PavementManager : MonoBehaviour
         {
             pavementCompleteTriggered = true;
             TriggerCityUpgrade();
+
+            //INTERACT OTHER SCRIPT
+            GameProgressManagerScript.UpdateGameProgressScore();
+
+
         }
     }
 
@@ -95,4 +108,6 @@ public class PavementManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.U)) TriggerCityUpgrade();
     }
+
+    
 }

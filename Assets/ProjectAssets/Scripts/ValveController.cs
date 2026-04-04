@@ -18,9 +18,13 @@ public class ValveController : MonoBehaviour
     private Transform grabbedValve;
     private float previousWandRoll;
 
+    
+
     void Start()
     {
+        
         audioSource = GetComponent<AudioSource>();
+
     }
 
     void Update()

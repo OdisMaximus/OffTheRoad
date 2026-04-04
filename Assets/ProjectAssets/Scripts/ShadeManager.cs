@@ -2,35 +2,45 @@
 
 public class ShadeManager : MonoBehaviour
 {
+    [Header("Shade Interaction Tracker")]
     public int numShadePlaced = 0;
-    public int shadesRequired = 6; // Set this to 6 in Inspector
-    public GameObject CongestionObjectsWest;
-    
-    private bool interaction3Opened = false;
+    public AudioSource SoundEffectPlacedShade;
+    public AudioSource VictoryAllShadePlaced;
 
+    [Header("Shade Interaction Goal")]
+    public int shadesRequired = 6; // Set this to 6 in Inspector
+
+    [Header("Connection: Game Progress Manager")]
+    public GameObject GameManagerObject;
+    public GameProgressManager GameProgressManagerScript;
+
+    void Start()
+    {
+        GameProgressManagerScript = GameManagerObject.GetComponent<GameProgressManager>();
+    }
+    
     void Update()
     {
-        // Added interaction3Opened check so it doesn't keep running every frame
-        if(!interaction3Opened && numShadePlaced >= shadesRequired)
+       if(numShadePlaced == shadesRequired)
         {
-            OpenInteraction3();
+            VictoryAllShadePlaced.Play();
+            GameProgressManagerScript.UpdateGameProgressScore();
+
+
+            numShadePlaced++;
         }
     }
 
     public void NumShadePlacedUpdate()
     {
         numShadePlaced += 1;
-    }
-
-    public void OpenInteraction3()
-    {
-        interaction3Opened = true;
-        numShadePlaced = 100; // Keep your flag logic
-
-        if(CongestionObjectsWest != null) 
+        
+        if(numShadePlaced != shadesRequired)
         {
-            CongestionObjectsWest.SetActive(false);
-            Debug.Log("Roadblocks cleared by Shade Manager!");
+            SoundEffectPlacedShade.Play();
         }
+            
     }
+
+   
 }

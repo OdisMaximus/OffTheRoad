@@ -31,6 +31,6 @@ public class AudioManager : MonoBehaviour
         quietTrafficSounds.Play();
         quietTrafficSounds.loop = true;
 
-        trafficManagerScript.FinalCongestionValue();
+        //trafficManagerScript.FinalCongestionValue();
     }
 }
