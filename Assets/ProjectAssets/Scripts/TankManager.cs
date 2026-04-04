@@ -14,7 +14,10 @@ public class TankManager : MonoBehaviour
     
     [Header("Victory Feedback")]
     public GameObject mistingSystem; 
-    public AudioSource winAudio; // Drag your audio source here
+    public AudioSource winAudio;
+
+    [Header("Misting Audio")]
+    public AudioClip mistingSound;
 
     private bool rewardActivated = false;
 
@@ -24,7 +27,6 @@ public class TankManager : MonoBehaviour
 
     void Update() {
         if (waterMesh) {
-            // Calculate percentage and scale the Y axis smoothly
             float fillPct = Mathf.Clamp01(currentWater / maxWater);
             float curScaleY = Mathf.Lerp(emptyScaleY, fullScaleY, fillPct);
             
@@ -32,12 +34,9 @@ public class TankManager : MonoBehaviour
             waterMesh.gameObject.SetActive(currentWater > 0.001f);
         }
 
-        // BRUTE FORCE KEY CHECK
         if (Input.GetKeyDown(KeyCode.V)) TriggerVictoryManually();
-        //if (CAVE2.GetButtonDown(CAVE2.Button.Button7)) TriggerVictoryManually();
     }
 
-    // Called by the ValveController script
     public void AddWaterFromValve(float amount)
     {
         if (currentWater < maxWater)
@@ -55,12 +54,12 @@ public class TankManager : MonoBehaviour
     void ActivateVictory() {
         rewardActivated = true;
         
-        // 1. Play Audio
+        // 1. Play win audio
         if (winAudio != null) {
             winAudio.Play();
         }
 
-        // 2. Turn on Misting Particles
+        // 2. Turn on misting particles
         if (mistingSystem) {
             mistingSystem.SetActive(true);
             
@@ -69,6 +68,15 @@ public class TankManager : MonoBehaviour
                 ps.gameObject.SetActive(true);
                 ps.Clear(); 
                 ps.Play();
+            }
+
+            // 3. Play misting spatial audio
+            AudioSource mistAudio = mistingSystem.GetComponent<AudioSource>();
+            if (mistAudio != null)
+            {
+                mistAudio.clip = mistingSound;
+                mistAudio.loop = true;
+                mistAudio.Play();
             }
         }
     }

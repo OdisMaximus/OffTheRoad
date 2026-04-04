@@ -23,25 +23,22 @@ public class PavementManager : MonoBehaviour
     [Tooltip("Drag the PARENT GameObject holding all cooling particles here")]
     public GameObject coolingParticlesParent; 
 
-    // Hidden arrays that the script will populate automatically
     private ParticleSystem[] heatingParticles;
     private ParticleSystem[] coolingParticles;
 
     [Header("Tool Swap")]
     public GameObject wandObject;
 
+    [Header("Audio")]
+    public AudioClip winSound;
+
     void Awake()
     {
-        // Automatically find every particle system inside the assigned parent folders
         if (heatingParticlesParent != null)
-        {
             heatingParticles = heatingParticlesParent.GetComponentsInChildren<ParticleSystem>();
-        }
         
         if (coolingParticlesParent != null)
-        {
             coolingParticles = coolingParticlesParent.GetComponentsInChildren<ParticleSystem>();
-        }
     }
 
     public void ReportTilePainted()
@@ -56,40 +53,35 @@ public class PavementManager : MonoBehaviour
 
     public void TriggerCityUpgrade()
     {
-        // 1. Auto-paint and SWAP MATERIAL
+        // 1. Play win sound
+        if (winSound != null)
+            AudioSource.PlayClipAtPoint(winSound, Camera.main.transform.position);
+
+        // 2. Auto-paint and swap material
         if (SidewalkFolder != null)
         {
             PaintableChunk[] allChunks = SidewalkFolder.GetComponentsInChildren<PaintableChunk>();
             foreach (PaintableChunk chunk in allChunks) 
             { 
                 chunk.ApplyPaint(); 
-
                 MeshRenderer renderer = chunk.GetComponent<MeshRenderer>();
                 if (renderer != null && solidPaintMaterial != null)
-                {
                     renderer.material = solidPaintMaterial;
-                }
             }
         }
 
-        // 2. PARTICLE SWAP (Stop Heat, Start Cooling)
+        // 3. Particle swap
         if (heatingParticles != null)
-        {
             foreach (ParticleSystem heat in heatingParticles) { if (heat != null) heat.Stop(); }
-        }
 
         if (coolingParticles != null)
-        {
             foreach (ParticleSystem cool in coolingParticles) { if (cool != null) cool.Play(); }
-        }
 
-        // 3. Disable Roadblocks
+        // 4. Disable roadblocks
         if (pavementRoadBlocks != null)
-        {
             foreach (GameObject block in pavementRoadBlocks) { if (block != null) block.SetActive(false); }
-        }
 
-        // 4. Tool Swap
+        // 5. Tool swap
         if (wandObject != null)
         {
             PaintBrush pb = wandObject.GetComponent<PaintBrush>();
@@ -101,6 +93,6 @@ public class PavementManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T)) TriggerCityUpgrade();
+        if (Input.GetKeyDown(KeyCode.U)) TriggerCityUpgrade();
     }
 }

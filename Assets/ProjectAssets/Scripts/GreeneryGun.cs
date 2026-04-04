@@ -4,33 +4,16 @@ public class GreeneryGun : MonoBehaviour
 {
     public float range = 50f;
     public Texture2D greeneryTexture;
-    public int ammo = 0;
     public AudioClip shootSound;
-    public AudioClip emptyClickSound;
-    public AudioClip reloadSound;
+    public AudioClip winSound;
+    public int totalBuildings = 16;
+    private int buildingsGreened = 0;
+    public TrafficManager trafficManager;
     private AudioSource audioSource;
-    private float nextClickTime = 0f;
-    public float clickCooldown = 0.3f;
-
-    [Header("Win Condition to Win")]
-    public int GreeneryAdded = 0;
-
-    public GameObject groupOfTraffic;
-
-    public GameObject GameManager;
-    public AudioManager AudioManagerScript;
-
-    public GameObject SunObject;
-    public ChangeSunColor ChangeSunColorScript;
 
     void Start()
     {
-        AudioManagerScript = GameManager.GetComponent<AudioManager>();
-        ChangeSunColorScript = SunObject.GetComponent<ChangeSunColor>();
-        
         audioSource = GetComponent<AudioSource>();
-        
-        
     }
 
     void Update()
@@ -39,32 +22,10 @@ public class GreeneryGun : MonoBehaviour
         {
             ShootGreenery();
         }
-
-        if(GreeneryAdded == 6)
-        {
-            groupOfTraffic.SetActive(false);
-            AudioManagerScript.WinConditionAudio();
-            ChangeSunColorScript.UpdateSunColor();
-
-            GreeneryAdded = 100;
-
-        }
     }
-
-
 
     void ShootGreenery()
     {
-        if (ammo <= 0)
-        {
-            if (Time.time >= nextClickTime)
-            {
-                audioSource.PlayOneShot(emptyClickSound);
-                nextClickTime = Time.time + clickCooldown;
-            }
-            return;
-        }
-
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, range))
         {
@@ -77,7 +38,6 @@ public class GreeneryGun : MonoBehaviour
                     return;
                 }
 
-                ammo--;
                 audioSource.PlayOneShot(shootSound);
                 EnableGreenery(hitObject);
 
@@ -100,6 +60,12 @@ public class GreeneryGun : MonoBehaviour
                         }
                     }
                 }
+
+                buildingsGreened++;
+                if (buildingsGreened >= totalBuildings)
+                {
+                    TriggerWin();
+                }
             }
         }
     }
@@ -112,21 +78,15 @@ public class GreeneryGun : MonoBehaviour
         if (greeneryGroup != null)
         {
             greeneryGroup.gameObject.SetActive(true);
-            Debug.Log("Greenery enabled!");
-            
-            //LINE NEEDED FOR WIN CONDITION
-            GreeneryAdded++;
-        }
-        else
-        {
-            Debug.Log("Greenery_group not found!");
         }
     }
 
-    public void AddAmmo(int amount)
+    void TriggerWin()
     {
-        ammo += amount;
-        audioSource.PlayOneShot(reloadSound);
-        Debug.Log("Ammo picked up! Ammo remaining: " + ammo);
+        audioSource.PlayOneShot(winSound);
+        if (trafficManager != null)
+        {
+            trafficManager.ReduceCongestion(trafficManager.maxCongestionLevel);
+        }
     }
 }
