@@ -1,18 +1,16 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameProgressManager : MonoBehaviour
 {
-
-    /* GAME PROGRESS TRACKER EXPLANATION
-        5 - Nothing Done, everything on default values
-        4 - 'Paint' interaction done, opens pathway to do 'Shade' interaction
-        3 - 'Shade' interaction done, opens pathway to 'Mist' interaction
-        2 - 'Mist' interaction done, opens pathway to 'Greenery Gun' interaction
-        1 - 'Greenery Gun' interaction done, opens pathway to 
-     
-     */
+    /*
+        5 - Start
+        4 - Paint done
+        3 - Shade done
+        2 - Mist done
+        1 - Greenery done
+    */
     public int gameProgressTracker = 5;
 
     [Header("Interaction 1: Paint")]
@@ -22,55 +20,69 @@ public class GameProgressManager : MonoBehaviour
     public GameObject blockageToMist;
 
     [Header("Interaction 3: Mist")]
-    public GameObject clearEastAndNorthTraffic; //EAST + NORTH TRAFFIC CONGESTION REMOVED FOR GREENERY GUN
-    public GameObject invisibleWalls; //CAN WALK STRAIGHT TO MIDDLE NOW
+    public GameObject clearEastAndNorthTraffic;
+    public GameObject invisibleWalls;
     public GameObject mistToGreeneryGunSign;
     public GameObject navigationSignage;
 
     [Header("Interaction 4: Greenery Gun")]
     public GameObject restOfTraffic;
-    
+
+    [Header("Traffic Progression")]
+    public GameObject[] trafficAfterPaint;
+    public GameObject[] trafficAfterShade;
+    public GameObject[] trafficAfterMist;
+    public GameObject[] trafficFinal;
+
+    [Header("Pedestrian Progression")]
+    public GameObject[] peopleAfterPaint;
+    public GameObject[] peopleAfterShade;
+    public GameObject[] peopleAfterMist;
+    public GameObject[] peopleFinal;
 
     public GameObject EditedSunObject;
     public ChangeSunColor ChangeSunColorScript;
-    
 
-    public AudioManager AudioManagerScript; 
+    public AudioManager AudioManagerScript;
 
-    [Header("Debugging")]
-    /* Sets all traffic to dissapear, test to make sure all conections wired correctly + make it obvious something happened :]c */
-    public GameObject TestDissapear;
-
-
-    // Start is called before the first frame update
     void Start()
     {
         ChangeSunColorScript = EditedSunObject.GetComponent<ChangeSunColor>();
         AudioManagerScript = GetComponent<AudioManager>();
-
     }
 
-    // Update is called once per frame
-    void Update()
+    // -------------------------
+    // HELPERS
+    // -------------------------
+    void SetGroupActive(GameObject[] group, bool active)
     {
-        //DEBUGGING - Get through all scenes, mainly to see ending scene :]
-        /*while(gameProgressTracker > -1)
+        if (group == null) return;
+
+        foreach (GameObject obj in group)
         {
-            UpdateGameProgressScore();
-        }*/
-            
+            if (obj != null)
+                obj.SetActive(active);
+        }
     }
 
+    // -------------------------
+    // PROGRESSION STEPS
+    // -------------------------
     public void TriggerNextShadeInteraction()
     {
         blockageToShade.SetActive(false);
 
+        // reduce some traffic, add some people
+        SetGroupActive(trafficAfterPaint, false);
+        SetGroupActive(peopleAfterPaint, true);
     }
 
     public void TriggerNextMistInteraction()
     {
-        
         blockageToMist.SetActive(false);
+
+        SetGroupActive(trafficAfterShade, false);
+        SetGroupActive(peopleAfterShade, true);
     }
 
     public void TriggerNextGreeneryGunInteraction()
@@ -80,15 +92,19 @@ public class GameProgressManager : MonoBehaviour
         mistToGreeneryGunSign.SetActive(true);
         navigationSignage.SetActive(false);
 
-
+        SetGroupActive(trafficAfterMist, false);
+        SetGroupActive(peopleAfterMist, true);
     }
 
     public void TriggerNextEndingScene()
     {
         ChangeSunColorScript.UpdateSunColor();
         AudioManagerScript.WinConditionAudio();
+
         restOfTraffic.SetActive(false);
-        
+
+        SetGroupActive(trafficFinal, false);
+        SetGroupActive(peopleFinal, true);
     }
 
     public void UpdateGameProgressScore()
@@ -98,19 +114,18 @@ public class GameProgressManager : MonoBehaviour
         if (gameProgressTracker == 4)
         {
             TriggerNextShadeInteraction();
-        
-        } else if (gameProgressTracker == 3)
+        }
+        else if (gameProgressTracker == 3)
         {
             TriggerNextMistInteraction();
-        
-        } else if(gameProgressTracker == 2)
+        }
+        else if (gameProgressTracker == 2)
         {
             TriggerNextGreeneryGunInteraction();
-        
-        } else if (gameProgressTracker == 1)
+        }
+        else if (gameProgressTracker == 1)
         {
             TriggerNextEndingScene();
         }
-            
     }
 }
