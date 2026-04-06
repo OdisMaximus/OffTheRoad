@@ -3,7 +3,17 @@ guid: 0010ecf1c11942342a5d0645b8ec77f6
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Barrier_Yellow_Right
+    second: {fileID: 2100000, guid: 3bf86109eadde224388f44088ea7cbf6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal
+    second: {fileID: 2100000, guid: 3fa11a38e95d84047849c44900bddb4e, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -81,7 +91,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.049999997
+    globalScale: 5
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

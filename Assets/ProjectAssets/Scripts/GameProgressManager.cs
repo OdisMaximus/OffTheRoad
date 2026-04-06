@@ -27,6 +27,8 @@ public class GameProgressManager : MonoBehaviour
 
     [Header("Interaction 4: Greenery Gun")]
     public GameObject restOfTraffic;
+    public GameObject backgroundFog;
+    public GameObject C02Particles;
 
     [Header("Traffic Progression")]
     public GameObject[] trafficAfterPaint;
@@ -45,10 +47,23 @@ public class GameProgressManager : MonoBehaviour
 
     public AudioManager AudioManagerScript;
 
+
+    void Update()
+    {
+        //DEBUGGING PURPOSES
+        /*while (gameProgressTracker >= -1)
+        {
+            UpdateGameProgressScore();
+        }*/
+
+    }
+
     void Start()
     {
         ChangeSunColorScript = EditedSunObject.GetComponent<ChangeSunColor>();
         AudioManagerScript = GetComponent<AudioManager>();
+
+        
     }
 
     // -------------------------
@@ -102,6 +117,8 @@ public class GameProgressManager : MonoBehaviour
         AudioManagerScript.WinConditionAudio();
 
         restOfTraffic.SetActive(false);
+        backgroundFog.SetActive(false);
+        C02Particles.SetActive(false);
 
         SetGroupActive(trafficFinal, false);
         SetGroupActive(peopleFinal, true);
