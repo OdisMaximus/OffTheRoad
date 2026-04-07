@@ -98,9 +98,7 @@ public class PavementManager : MonoBehaviour
         if (wandObject != null)
         {
             PaintBrush pb = wandObject.GetComponent<PaintBrush>();
-            GreeneryGun gg = wandObject.GetComponent<GreeneryGun>();
             if (pb != null) pb.FinalizeWinState(); 
-            if (gg != null) gg.enabled = true;
         }
     }
 
